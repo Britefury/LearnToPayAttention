@@ -14,8 +14,8 @@ from model1 import AttnVGG_before
 from model2 import AttnVGG_after
 from utilities import *
 
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 
 parser = argparse.ArgumentParser(description="LearnToPayAttn-CIFAR100")
 
@@ -48,7 +48,8 @@ def main():
         transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
     ])
     trainset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=True, download=True, transform=transform_train)
-    trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8, worker_init_fn=_init_fn)
+    # trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8, worker_init_fn=_init_fn)
+    trainloader = torch.utils.data.DataLoader(trainset, batch_size=opt.batch_size, shuffle=True, num_workers=8)
     testset = torchvision.datasets.CIFAR100(root='CIFAR100_data', train=False, download=True, transform=transform_test)
     testloader = torch.utils.data.DataLoader(testset, batch_size=100, shuffle=False, num_workers=5)
     print('done')
@@ -78,8 +79,9 @@ def main():
     ## move to GPU
     print('\nmoving to GPU ...\n')
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    device_ids = [0,1]
-    model = nn.DataParallel(net, device_ids=device_ids).to(device)
+    # device_ids = [0,1]
+    # model = nn.DataParallel(net, device_ids=device_ids).to(device)
+    model = net.to(device)
     criterion.to(device)
     print('done')
 
